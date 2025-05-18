@@ -14,11 +14,13 @@ app.get('/api/:path(*)', async (req, res) => {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const path = req.params.path;  // captures everything after /api/
-  const targetUrl = `https://${path}`;
-
+  const url = req.originalUrl.replace(/^\/api\//, '');
   try {
-    const response = await axios(targetUrl);
+    const targetUrl = `https://${url.split('?')[0]}`;
+    const query = req.url.split('?')[1] ? `?${req.url.split('?')[1]}` : '';
+    const fullUrl = `${targetUrl}${query}`;
+    const response = await axios.get(fullUrl);
+    // return res.status(200).json({ message: 'Proxy is working!' });
     return res.status(response.status).json(response.data);
   } catch (error) {
     const status = error.response?.status || 500;
