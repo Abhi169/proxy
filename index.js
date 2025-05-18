@@ -27,6 +27,10 @@ app.get('/api/:path(*)', async (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+  return res.status(200).json({ message: 'API is running' });
+});
+
 const PORT = process.env.PORT || 3050;
 app.listen(PORT, () => console.log(`Proxy running on port ${PORT}`));
 
